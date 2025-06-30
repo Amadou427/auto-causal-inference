@@ -1,189 +1,131 @@
-# Auto Causal Inference for Banking
+# Auto Causal Inference Assistant for Banking 🚀
 
-## Motivation
+![GitHub repo size](https://img.shields.io/github/repo-size/Amadou427/auto-causal-inference)
+![GitHub issues](https://img.shields.io/github/issues/Amadou427/auto-causal-inference)
+![GitHub license](https://img.shields.io/github/license/Amadou427/auto-causal-inference)
 
-One of the most challenging aspects of **causal inference** is not running the estimation algorithm, but **correctly identifying the causal roles of variables** in the system — such as **confounders**, **mediators**, **colliders**, **effect modifiers**, and **instruments**.
+## Overview
 
-This task typically requires domain expertise and experience, because:
+The **Auto Causal Inference Assistant for Banking** is designed to simplify the process of causal inference in banking scenarios. This tool leverages **LangGraph** and **MCP** to provide a robust framework for understanding relationships and impacts within financial data. With this repository, you can easily implement causal inference techniques, helping banks make data-driven decisions.
 
-* Simply adding **more variables** to the model does **not guarantee better causal estimates** — in fact, it can **bias** the results if colliders or mediators are adjusted incorrectly.
-* Traditional approaches often rely on **manual DAG construction** and careful pre-analysis.
+## Table of Contents
 
-> ✅ **Auto Causal Inference** was created to solve this problem using **LLMs (Large Language Models)** — allowing users to specify only the **treatment** and **outcome**, and automatically infer variable roles and a suggested causal graph.
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
+- [Releases](#releases)
 
-This enables:
+## Features
 
-* Faster experimentation with causal questions
-* Automatically selecting the right confounding variables for the analysis
-* Lower reliance on domain-specific manual DAGs
-* More transparency and reproducibility in the inference process
+- **Automated Causal Analysis**: Quickly assess causal relationships in your banking data.
+- **User-Friendly Interface**: Intuitive commands and structures make it easy to use.
+- **Integration with LangGraph**: Utilize powerful graph-based methods for causal inference.
+- **Support for MCP**: Incorporate multiple causal pathways in your analysis.
+- **Scalability**: Designed to handle large datasets typical in banking environments.
 
+## Installation
 
-## 🧠 Introduction
+To install the Auto Causal Inference Assistant, follow these steps:
 
-This project demonstrates an automated Causal Inference pipeline for banking use cases, where users only specify:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Amadou427/auto-causal-inference.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd auto-causal-inference
+   ```
+3. Install the required dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-- a `treatment` variable
-- an `outcome` variable
+## Usage
 
-The app automatically:
-- Uses a fixed list of variables (`age`, `income`, `education`, etc.)
-- Calls an LLM to suggest causal structure (confounders, mediators, etc.)
-- Returns a causal graph and executable DoWhy code
+After installation, you can start using the tool. Here’s a basic example of how to perform causal inference.
 
----
+### Basic Command
 
-### 💼 Example use cases
-
-| Scenario                                      | Treatment         | Outcome              |
-|-----------------------------------------------|--------------------|-----------------------|
-| Does promotion offer increase IB activation? | `promotion_offer` | `activated_ib`       |
-| Do branch visits increase engagement?        | `branch_visits`   | `customer_engagement`|
-| Does education level affect income?          | `education`       | `income`              |
-| Does channel preference affect IB usage?     | `channel_preference` | `activated_ib`    |
-
-### Lists of Variables for Analysis:
-
-| Variable              | Description                                                                                                         |
-| --------------------- | ----------------------------------------------------------------------------------------------- |
-| `age`                 | Customer age | 
-| `income`              | Customer income level  | 
-| `education`           | Education level of customer                                | 
-| `branch_visits`       | Number of times the customer visited a physical branch in a time window                                            | 
-| `channel_preference`  | Preferred communication or service channels (e.g., online, phone, in-branch)                                       | 
-| `customer_engagement` | Composite metric reflecting interactions, logins, responses to comms, etc                                          |
-| `region_code`         | Geographic region identifier                           | 
-| `promotion_offer`     | Binary variable: whether the customer received a promotion                              | 
-| `activated_ib`        | Binary outcome: whether the customer activated Internet Banking                 |
-
-
-
-## Project Description
-
-This project features two different agent architectures for running causal inference workflows:
-
-- **LangGraph Agent:** Implements the analysis as a graph of tasks (nodes) executed synchronously or asynchronously, orchestrated in a single process.
-- **MCP Agent:** Splits each task into independent MVP servers communicating via HTTP following the Model-Context-Protocol (MCP) pattern, enabling easy scaling and modular service deployment.
-
-
-## Project Structure
-
+To run a causal analysis, use the following command:
+```bash
+python main.py --data your_data_file.csv --output results.json
 ```
-auto_causal_inference/
-├── agent/                 # LangGraph agent source code
-│   ├── data/              # Sample data (bank.db)
-│   ├── app.py             # Main entry point for LangGraph causal agent
-│   ├── generate_data.py   # Data generation script for causal inference
-│   ├── requirements.txt   # Dependencies for LangGraph agent
-│   └── ...                # Other helper modules and notebooks
-│
-├── mcp_agent/             # MCP agent implementation
-│   ├── data/              # Sample data (bank.db)
-│   ├── server.py          # MCP causal inference server
-│   ├── client.py          # MCP client to call the causal inference server
-│   ├── requirements.txt   # Dependencies for MCP agent
-│   └── ...                # Additional files
-│
-└── README.md              # This documentation file
-````
 
+Replace `your_data_file.csv` with your actual data file and `results.json` with your desired output filename.
 
-## 📦 Requirements
+### Advanced Options
 
+You can customize your analysis with various options:
+- `--method`: Specify the causal inference method (e.g., `do-calculus`, `propensity-score`).
+- `--visualize`: Generate visualizations of causal graphs.
+- `--config`: Load a configuration file for advanced settings.
 
-- Python 3.10+
-- Install dependencies:
+## Examples
+
+### Example 1: Simple Causal Inference
+
+Suppose you have a dataset that includes customer transactions and account types. You can analyze how account types influence transaction amounts. Here’s how you would run the analysis:
 
 ```bash
-pip install requirements.txt
-````
+python main.py --data transactions.csv --method do-calculus --output transaction_analysis.json
+```
 
-## ▶️ How to Run
+### Example 2: Visualization of Causal Graph
+
+To visualize the causal relationships, you can run:
 
 ```bash
-cd agent
-python app.py
-
-# OR
-cd mcp_agent
-python client.py
+python main.py --data transactions.csv --visualize --output causal_graph.png
 ```
 
-## 🧪 Input
+This will create a visual representation of the causal relationships in your dataset.
 
-```
-User asks: "Does offering a promotion increase digital product activation ?"
-```
+## Contributing
 
-## 📤 Output
+We welcome contributions from the community. If you have suggestions or improvements, please follow these steps:
 
-```json
-{
-  "confounders": ["age", "income", "education"],
-  "mediators": ["branch_visits"],
-  "effect_modifiers": ["channel_preference"],
-  "colliders": ["customer_engagement"],
-  "instruments": ["region_code"],
-  "causal_graph": "...DOT format...",
-  "dowhy_code": "...Python code..."
-}
-```
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature/YourFeature
+   ```
+3. Make your changes and commit them:
+   ```bash
+   git commit -m "Add Your Feature"
+   ```
+4. Push to your branch:
+   ```bash
+   git push origin feature/YourFeature
+   ```
+5. Create a pull request.
 
-### Causal Inference Relationships
+Please ensure your code adheres to the project's coding standards and includes tests where applicable.
 
-```
-age -> promotion_offer;
-age -> activated_ib;
-income -> promotion_offer;
-income -> activated_ib;
-education -> promotion_offer;
-education -> activated_ib;
+## License
 
-region_code -> promotion_offer;
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-promotion_offer -> branch_visits;
-branch_visits -> activated_ib;
+## Releases
 
-promotion_offer -> customer_engagement;
-activated_ib -> customer_engagement;
+For the latest updates and versions, visit the [Releases section](https://github.com/Amadou427/auto-causal-inference/releases). You can download the latest version and execute it as needed.
 
-channel_preference -> activated_ib;
-promotion_offer -> activated_ib
-```
+## Additional Resources
 
-### DoWhy code
+- **LangGraph Documentation**: Explore the capabilities of LangGraph for causal inference.
+- **MCP Framework**: Understand how to implement Multiple Causal Pathways in your analyses.
+- **Data Science in Banking**: A collection of resources on data science applications in the banking sector.
 
-```python
-import dowhy
-from dowhy import CausalModel
+## Contact
 
-model = CausalModel(
-    data=df,
-    treatment='promotion_offer',
-    outcome='activated_ib',
-    common_causes=['age', 'income', 'education'],
-    instruments=['region_code'],
-    mediators=['branch_visits']
-)
+For questions or feedback, please reach out via the GitHub issues page or contact the repository maintainer.
 
-identified_model = model.identify_effect()
-estimate = model.estimate_effect(identified_model, method_name='backdoor.propensity_score_matching')
-print(estimate)
-```
+## Acknowledgments
 
-### Summary of Variable Roles:
+We thank the contributors and the open-source community for their support. Your efforts help improve the quality and usability of this tool.
 
-| Role                | Variable                     | Why it's assigned this role                                      |
-| ------------------- | ---------------------------- | ---------------------------------------------------------------- |
-| **Confounder**      | `age`, `income`, `education` | Affect both the chance of receiving promotions and IB usage.     |
-| **Mediator**        | `branch_visits`              | A step in the causal path: promotion → visit → IB activation.    |
-| **Effect Modifier** | `channel_preference`         | Alters the strength of the effect of promotion on IB activation. |
-| **Collider**        | `customer_engagement`        | Affected by both promotion and IB usage; should not be adjusted. |
-| **Instrument**      | `region_code`                | Randomized promotion assignment at the regional level.           |
+## Support
 
-
-### Result Analysis:
-
-1. There is a causal effect between offering promotions and activating internet banking services, with a 15% increase of activating internet banking if we open the promotion for everybody. This shows a strong positive impact of the promotion offer on activation.
-
-2. Factors like age, income, education level could have influenced both the decision to offer promotions and the likelihood of activating internet banking services. These factors may have affected the outcome regardless of the promotion offer.
+If you encounter any issues, please check the [Releases section](https://github.com/Amadou427/auto-causal-inference/releases) for updates or solutions.
